@@ -10,5 +10,6 @@ del *.out /s
 del *.lof /s
 del *.lol /s
 del *.lot /s
+del *.spl /s
 del *.fdb_latexmk /s
 del *.synctex.gz /s

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-xelatex 0.bpr.tex
-bibtex 0.bpr.aux
-xelatex 0.bpr.tex
-xelatex 0.bpr.tex
+xelatex mcts-h.tex
+bibtex mcts-h.aux
+xelatex mcts-h.tex
+xelatex mcts-h.tex
