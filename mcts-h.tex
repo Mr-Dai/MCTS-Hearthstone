@@ -1,11 +1,11 @@
 ﻿\documentclass[preprint]{ctexart}
-\setCJKmainfont{KaiTi}
 
 %%%%%% 导入包 %%%%%%
 \usepackage{graphicx}
 \usepackage[unicode]{hyperref}
 \usepackage{xcolor}
 \usepackage{cite}
+\usepackage{url}
 \usepackage{indentfirst}
 
 %%%%%% 设置字号 %%%%%%
@@ -72,7 +72,7 @@
 
 
 %%%% 定义标题格式，包括title，author，affiliation，email等 %%%%
-\title{基于蒙特卡洛树搜索的炉石传说人工智能}
+\title{基于蒙特卡洛搜索的炉石传说人工智能}
 \author{彭翌\\[2ex]
 \xiaosihao 中山大学 数据科学与计算机学院\\[2ex]
 }
@@ -86,13 +86,16 @@
 \newpage
 
 \include{abstract}
-\include{chapter1}
-\include{chapter2}
-\include{chapter3}
-\include{chapter4}
-\include{chapter5}
 
-\include{appendixA}
+\include{chapter1}
+
+\include{chapter2}
+
+\include{chapter3}
+
+\include{chapter4}
+
+\include{chapter5}
 
 \newpage
 \bibliography{mcts-h}{}
