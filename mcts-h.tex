@@ -2,6 +2,8 @@
 
 %%%%%% 导入包 %%%%%%
 \usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage[unicode]{hyperref}
 \usepackage{xcolor}
 \usepackage{cite}
@@ -22,6 +24,7 @@
 \newcommand{\xiaowuhao}{\fontsize{9pt}{\baselineskip}\selectfont}
 \newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}
 \newcommand{\qihao}{\fontsize{5.25pt}{\baselineskip}\selectfont}
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 
 %%%% 段落首行缩进两个字 %%%%
 \makeatletter
@@ -45,21 +48,6 @@
 
 %%%% 正文开始 %%%%
 \begin{document}
-
-%%%% 定理类环境的定义 %%%%
-\newtheorem{example}{例}             % 整体编号
-\newtheorem{algorithm}{算法}
-\newtheorem{theorem}{定理}[section]  % 按 section 编号
-\newtheorem{definition}{定义}
-\newtheorem{axiom}{公理}
-\newtheorem{property}{性质}
-\newtheorem{proposition}{命题}
-\newtheorem{lemma}{引理}
-\newtheorem{corollary}{推论}
-\newtheorem{remark}{注解}
-\newtheorem{condition}{条件}
-\newtheorem{conclusion}{结论}
-\newtheorem{assumption}{假设}
 
 %%%% 重定义 %%%%
 \renewcommand{\contentsname}{目录}  % 将Contents改为目录
