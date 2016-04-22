@@ -1,22 +1,8 @@
-%\documentclass[12pt,a4paper,fleqn,openany]{book}
-
 \def\qed{\hfill \vrule height6pt width 6pt depth 0pt}
-%\def\QEDclosed{\mbox{\rule[0pt]{1.3ex}{1.3ex}}} % 定义实心符
-%\def\QEDopen{{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.2pt}\fbox{\rule[0pt]{0pt}{1.3ex}\rule[0pt]{1.3ex}{0pt}}}} %定义空心符
-%\def\QED{\QEDclosed} % 选填\QEDclosed得到实心
-%\def\proof{\noindent{\bf Proof}: } %定义证明，注意选择中英文
-%\def\endproof{\hspace*{\fill}~\QED\par\endtrivlist\unskip}%在proof环境自动添加结束符。
-
-
-%\documentclass[12pt,a4paper]{book}
 \documentclass[12pt,a4paper,openany,oneside]{book}  %去掉参数openany与oneside，用以实现论文的每一个章节从奇数页开始打印
 
 
 \usepackage{indentfirst}    % 首行缩进宏包
-%\usepackage[body={15.5true cm,22true cm},
-%            twosideshift=0 pt,
-%            headheight=1.5 em]{geometry}    % 版面控制宏包
-%\usepackage[top=2cm,bottom=1.9cm,left=2.5cm,right=2.3cm,includehead,includefoot%]{geometry}                 % 清泉模板的页面设置(有改动)
 
 \usepackage[top=2cm,bottom=1.9cm,left=3.0cm,right=3.0cm,includehead,includefoot%
             ]{geometry}                 % 清泉模板的页面设置(有改动)
@@ -25,7 +11,6 @@
 \usepackage{titletoc}
 
 \usepackage{CJK}    % 中文支持宏包
-%\usepackage{cite}   % 支持引用的宏包
 
 \usepackage[perpage,symbol]{footmisc}   % 脚注控制
 
@@ -34,17 +19,12 @@
 \usepackage{type1cm}
 \usepackage{palatino}
 \usepackage{listings}  % 源代码列表
-%\usepackage{fancybox}
 
 % 使用 AMS LaTeX 用来排出更加漂亮的公式
 \usepackage[tbtags]{amsmath}
 \usepackage{amssymb}
 %%%%% ITL 专用 %%%%%%%%%%%%
 \usepackage{wasysym}
-%\usepackage{tweaklist} % 调整列表环境
-%\newcommand{\nextt}{\wasyfamily\char035\rmfamily}
-%\newcommand{\sometimes}{\wasyfamily\char051\rmfamily}
-%\newcommand{\always}{\wasyfamily\char050\rmfamily}
 \newcommand{\nextt}{\ensuremath{\Circle}}
 \newcommand{\always}{\ensuremath{\Box}}
 \newcommand{\sometimes}{\ensuremath{\Diamond}}
@@ -56,12 +36,7 @@
 \newcommand{\nleadto}[2]{\ensuremath{\overset{#1}{#2}}}  %new leadsto
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 
-%\usepackage{bibspacing} % 参考文献之间距，用于bibtex
-%\setlength{\bibspacing}{\baselineskip}
-
 \usepackage{mathrsfs}   % 不同于\mathcal or \mathfrak 之类的英文花体字体
-
-%\usepackage[CJKbookmarks=true]{hyperref}
 
 % 定理类环境宏包，其中 amsmath 选项用来兼容 AMS LaTeX 的宏包
 \usepackage[amsmath,thmmarks]{ntheorem} % ntheorem load before amsmath
@@ -78,9 +53,6 @@
 
 % 图文混排用宏包，目前选用 floatflt.sty
 \usepackage{floatflt}
-%\usepackage{wrapfig}
-%\usepackage{picinpar}
-%\usepackage{picins}
 
 
 \usepackage{listings}
@@ -106,59 +78,6 @@
 \setlength{\parskip}{2pt plus1pt minus1pt} %段落之间的竖直距离
 \renewcommand{\baselinestretch}{1.2} % This command is to define space between lines.
         % Use 2.0 for double-space lines, 1.2 for single-space lines.
-
-%\addtolength{\topsep}{-0.5em} \setlength{\partopsep}{0pt}
-% 注：公式的精调
-%   \arraycolsep    array环境中列间距宽度的一半
-%   \jot            在eqnarray和eqnarray*环境中插入多行公式两行之间的额外距离
-%   \mathindent     当选择了文档类选项fleqn时数学公式的缩进量
-%   \abovedisplayskip 当显示公式的左边与左页边界的距离比前面文本行结尾到左页边界的距离还要小时插入在显示公式上方的竖直距离。这样的公式标记为太长
-%   \belowdisplayskip 插入在太长显示公式下方的竖直距离
-%   \abovedisplayshortskip 插入在太短显示公式上方的竖直距离。所谓太短公式就是公式的左边在前面文本行结尾的右边
-%   \belowdisplayshortskip 插入在太短显示公式下方的竖直距离
-%   \topsep         在选择文档类选项fleqn时并不应用上述四种距离，这里要在显示公式的下方和上方插入\topsep
-%   上面除\jot外所有参数都应该是橡皮长度
-
-
-
-% 研究生学位论文内容一律采用计算机编辑，用A4规格纸输出，打印区面积为230mm×155mm(包括篇眉)。
-% 总结：即 \headheight + \headsep + \textheight = 230 mm
-% 解释： \headheight 页眉的高度
-%       \headsep        页眉基线到正文顶部的距离
-%       \textheight     主要正文的高度
-
-% 那么应如何设置为好？
-% 注：A4纸大小为29.7×21 cm, 1 inch = 2.54 cm
-
-%% 最好用geometry.sty宏包
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  中文对应英文字体的大小 %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CCT中的定义是
-% Chinese English
-%  0 36
-%  1 27.5
-%  2 21
-%  3 16
-%  4 13.75
-%  5 10.5
-%  6 8
-%  7 5.25
-% -4 12
-% -5 9
-% 每一级和前级大约相差1.3倍
-
-% 在CJK中如何指定任意大小的字体?
-% 也就是说,我能不能指定如13.75pt这样大小的字体?
-% 现在,我正在写论文. 所里要求用四号字.
-% 用\fontsize{13.75pt}{13.75pt}\selectfont
-
-
-
-%\setlength{\mathindent}{4.7 em}     %左对齐公式缩进量
 \def\ZK{\hspace*{1.3cm}}
 \def\DZK{\hspace*{4mm}}
 \def\DAZK{\hspace*{7mm}}
@@ -170,16 +89,11 @@
 \def\GAZK{\hspace*{11mm}}
 \def\FZK{\hspace*{14mm}}
 
-% 若文稿使用\textwidth指令设定正文宽度，应将其置于fancyhdr宏包指令之前
 \usepackage{fancyhdr}
 
 \newcommand{\makeheadrule}{%
     \makebox[0pt][l]{\rule[.7\baselineskip]{\headwidth}{1.2pt}}%
     \rule[.6\baselineskip]{\headwidth}{0.2pt}\vskip-.8\baselineskip}
-
-%\newcommand{\makeheadrule}{%
-%    \makebox[-3pt][l]{\rule[.7\baselineskip]{\headwidth}{0.4pt}}
-%    \rule[0.85\baselineskip]{\headwidth}{1.5pt}\vskip-.8\baselineskip}
 
 \makeatletter
 \renewcommand{\headrule}{%
@@ -193,20 +107,6 @@
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\bottomfraction}{0.65}
 \renewcommand{\floatpagefraction}{0.60}
-
-
-%利用下述命令来定义用户自己的宏
-%\newcommand \ {}
-%例如：下面这个宏是非常有用的。
-%\renewcommand{\theequation}{\arabic{chapter}.\arabic{section}.\arabic{equation}}
-%\renewcommand \sectionformat{}     %去掉中间对齐的sectionformat，这样就把节的标题左对齐了。
-
-% \renewcommand{\mathbf}[1]{\mbox{\boldmath $ #1 $}}
-    %Redefine the default command \mathbf to make math symbol both bold and italic.
-    % It is only for math mode. By PENG Zhaowang on July 12, 1999
-    % Note: the default \mathbf produce bold but not italic math symbol.
-%% ** Do NOT use this command,
-%% **  instead, use bm.sty macros to make math symbol both bold and italic
 
 \newcommand{\ucite}[1]{$^{\mbox{\scriptsize \cite{#1}}}$}
     %Define a new command \ucite to generate upper-script (i.e., superscript) cite.
@@ -313,14 +213,6 @@
 \captiontext}}
 \fi
 
-%下面这组命令可以使公式编号随着每开始新的一节而重新开始。
-%\makeatletter      % '@' is now a normail "letter" for TeX
-%\@addtoreset{equation}{section}
-%\makeatother       % '@' is restored as a "non-letter" character for TeX
-
-%\includeonly{chap01}
-
-
 
  \begin{CJK*}{GBK}{}
  \makeatletter
@@ -357,36 +249,11 @@
  \theoremheaderfont{\CJKfamily{hei}\rmfamily}
  \theorembodyfont{\CJKfamily{kai}\rmfamily}
  \theoremseparator{：}
- %\theoremsymbol{$\blacksquare$}
  \newtheorem{proof}{\hei 证明}
-
- %\theoremsymbol{$\square$}
- %\newtheorem{example}{\hei 例}[chapter]
 
 \end{CJK*}
 
 \allowdisplaybreaks[4]  % The reason is bellow
-% 请问，\eqnarray如果很长，影响分栏、换行和分页（整块挪动，造成页面空白），
-% 是否可以设置成为自动调整模式？
-%
-% 答：如果您使用\ducomentclass{amsart}或{amsbook}等，在\begin{document}前加上
-% 命令\allowdisplaybreaks[4]，在排版数学公式时使用下列命令（不要使用\eqnarray）
-% 即可解决您的问题：
-% \begin{equation}
-%   公式
-% \end{equation}
-%
-% \begin{align}
-%   公式
-% \end{align}
-%
-% \begin{gather}
-%   公式
-% \end{gather}
-
-% also
-%   Within the scope of an \allowdisplaybreaks command, the \\*
-%   command can be used to prohibit a page break, as usual.
 
 \newlength\CJKtwospaces
 
@@ -394,31 +261,6 @@
     \settowidth\CJKtwospaces{\CJKchar{"0A1}{"0A1}\CJKchar{"0A1}{"0A1}}%
     \parindent\CJKtwospaces
   }
-
-
-  %\ifx\pdfoutput\undefined  %========此段程序有问题？即PDF的输出有缺字、少字、出怪字？
-         %\usepackage[dvips]{graphicx}
-%\usepackage[dvips]{thumbpdf}
-%\usepackage[ps2pdf,
- %           pdfstartview=FitH,
- %           CJKbookmarks=true,
- %           colorlinks=true,
- %           linkcolor=blue,
- %           citecolor=blue]{hyperref}
-%\AtBeginDvi{\special{pdf:tounicode GBK-EUC-UCS2}} % GBK -> Unicode
-%\else
-%\usepackage[pdftex]{graphicx}
-%\usepackage[pdftex]{thumbpdf}
-%\usepackage[pdftex,
-%            pdfstartview=FitH,
-%            CJKbookmarks=true,
-%            colorlinks=true,
-%            linkcolor=blue,
-%            citecolor=blue]{hyperref}
-
-% \fi
-
-%^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 \ifx\pdfoutput\undefined
 \usepackage[dvips]{graphicx}
@@ -439,11 +281,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%
 \usepackage{tweaklist} % 调整列表环境
-\renewcommand{\itemhook}{\setlength{\topsep}{-0.1em}%
-%\renewcommand{\enumhook}{\setlength{\topsep}{-10mm}%
- % \setlength{\itemsep}{-0.5\baselineskip}}
+\renewcommand{\itemhook}{\setlength{\topsep}{-0.1em}
   \setlength{\itemsep}{-0.35em}
-  %\setlength{\itemindent}{0.5em}
   \setlength{\leftmargin}{3.1em}}
 
 
@@ -453,10 +292,8 @@
 \usepackage{makeidx}
 \usepackage{moreverb}
 \usepackage[lined,boxed,commentsnumbered]{algorithm2e}
-%\newcommand{\papername}{基于知识的~Golog~的一阶解释器：理论与实现}
-\newcommand{\papername}{稳定模型语义下不一致本体的存在规则语言修复理论与实现}
+\newcommand{\papername}{基于蒙特卡洛方法的炉石传说人工智能}
 \newcommand{\schoolname}{中山大学本科毕业论文}
-%\newcommand{\sll}{$\mathcal{SL}$}
 \newcommand{\prolog}{\texttt{Prolog}}
 \newcommand{\golog}{$Golog$}
 \newcommand{\congolog}{$ConGolog$}
@@ -496,7 +333,6 @@
 \newcommand{\mifthenelse}{\textbf{if}-\textbf{then}-\textbf{else}}
 \newcommand{\mwhileloop}{\textbf{while}-\textbf{loop}}
 
-%\newcommand{\kemph}[1]{{\kai #1}}
 \newcommand{\memph}[1]{{\hei #1}}
 
 \newcommand{\fquery}{F}
@@ -538,35 +374,13 @@
     {0pt}{1.5ex plus .1ex minus .2ex}{\wordsep}
 
 \pagestyle{fancy}
-%\renewcommand{\chaptermark}[1]{\markboth{\chaptername \ #1}{}}
  \renewcommand{\chaptermark}[1]{\markboth{第\thechapter 章\ #1}{}}
-%以上指令中\chaptermark用于重新定义页眉内之章标题；
-%其内容取自LaTeX的\markboth指令。事实上\markboth指令用于存放两项信息，分别
-%存放于指令之后的两个大括号内。在book文件类别中，第一项为章名的相关信息；
-%第二项为节标题的相关信息。故以上命令是重新定义章标题存放于页眉/页脚的内容，
-%节标题不变，因此第二对大括号内为空白
-% \fancyhf[LO,RO]{\thepage}
-% \fancyhead[LE,RO]{\thepage}
-%注：在book文件类别下,\leftmark自动存录各章之章名,\rightmark记录节标题
-% \fancyhead[LO]{\CJKfamily{fs}\nouppercase\rightmark}
- %\fancyhead[L]{\CJKfamily{fs}\papername} %蔡明辉的版本
- %\fancyhead[R]{\CJKfamily{fs}\leftmark}
- %\fancyhead[L]{\CJKfamily{fs}\schoolname} %页眉的左边
- %\fancyhead[R]{\CJKfamily{fs}\papername}  %页眉的右边
-
-
-
-
-
-%\pagestyle{empty}
-%\pagenumbering{}
 \input{cover}
 
 \renewcommand\contentsname{目\quad 录}
 \titlecontents{chapter}
               [0.0em]
               {\bfseries\song  \addvspace{2bp minus 0bp}}  %\song
-              %{\song  \addvspace{2bp minus 0bp}}  %\song
               {\contentslabel{2em}}
               {}
               {\titlerule*[4pt]{.}\contentspage}
@@ -586,7 +400,6 @@
 
  %英文摘要
  \include{abstract2}
- %\include{phd-term}
  \setcounter{tocdepth}{1}
  \phantomsection
  \tableofcontents
@@ -603,49 +416,15 @@
  \include{chap5}
 
 \backmatter %结束章节自动编号
-%\addcontentsline{toc}{chapter}{\numberline{}\bibname} % 解决目录中没有相应的参考文献的条目问题
-                                                       % (其位置对生成pdf书签也有问题.2004.4.9)
 
-
-%\begin{thebibliography}{99}
 \addtolength{\itemsep}{-0.8 em} % 缩小参考文献间的垂直间距
-    %\input{phD.bib}
-    %\bibliographystyle{chinesebst}
-    %\bibliographystyle{plain}
-%\bibliographystyle{unsrtnat}
 \bibliographystyle{paper2}
 \phantomsection
-%\addcontentsline{toc}{chapter}{参考文献}
 \addcontentsline{toc}{chapter}{参考文献} % 解决目录中没有相应的参考文献的条目问题
-
-%\nocite{*} % 列出所有的参考文献
 \bibliography{mcts-h}
 
 \include{ack}   %论文感谢部分
-
-%\include{copy-right}
+\include{copy-right}
 \clearpage
 \end{CJK*}
 \end{document}
-
-% 专题：eps文件的制作技巧
-% 1. 有些Origin的图生成有问题，比如打印到eps文件时超出版面，这时可将图以80%的比例打印到
-%    5D PDF Creator的PS打印机，纸的版面为A4、纵向。再将%%PageTrailer之后的部分删除即可。
-
-
-% 问题：关于附录的处理
-
-% 在CCT写中文毕业论文时，
-% 我试图用\appendix命令加入一个附录，
-% 但是编译以后，就是无法显示appendixA的抬头，
-% 而且在目录里面也没有附录，
-% 请问这是怎么一回事？
-
-% 采用如下输入框架：
-% \part{附录}
-% \begin{appendix}
-% \renewcommand{\chaptername}{附录\Alph{chapter}}
-% \include{ap1}
-% \include{ap2}
-% \end{appendix}
-% 在ap1.ctx等中同正文一样采用\chapter, \section等命令。
