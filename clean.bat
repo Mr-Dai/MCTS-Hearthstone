@@ -13,3 +13,4 @@ del *.lot /s
 del *.spl /s
 del *.fdb_latexmk /s
 del *.synctex.gz /s
+del *.sav /s

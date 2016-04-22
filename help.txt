@@ -1,0 +1,7 @@
+
+首先在ctex里面点击进入windows命令行的按钮，黑色矩形带一个 C:\\ 的图标。
+（或者在键盘上敲入 windows+r 也可以）；
+
+然后输入命令  gbk2uni paper.out +回车
+
+最后输入命令  pdflatex paper.tex
