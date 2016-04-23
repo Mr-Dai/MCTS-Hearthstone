@@ -1,5 +1,5 @@
-\chapter{蒙特卡洛搜索}
-\label{section:MonteCarloSearch}
+\chapter{预备知识}
+\label{section:Preliminaries}
 \section{蒙特卡洛方法}
 \label{section:MonteCarloMethods}
 
@@ -7,8 +7,8 @@
 蒙特卡洛方法主要起源于统计物理领域，被用于求出某些不可解的积分方程的近似值，现多被用于求解那些无法通过数学方法求解的物理或数学问题，
 而其重复采样求取近似值的思想更是被延伸到了其他各种领域。
 
-Abramson\cite{abramson1990expected}首次展示了蒙特卡洛方法的随机采样可以被用于近似某个对弈决策的理论收益。
-使用Gelly和Silver所提出的代数符号\cite{gelly2011monte}，那么某个对弈操作的期望收益可以表示为$Q$值如下：
+Abramson\cite{abramson1990expected}~首次展示了蒙特卡洛方法的随机采样可以被用于近似某个对弈决策的理论收益。
+使用~Gelly~和~Silver~所提出的代数符号\cite{gelly2011monte}，那么某个对弈操作的期望收益可以表示为$Q$值如下：
 \begin{equation}
 Q(s,a) = \frac{1}{N(s,a)} \sum_{i=1}^{N(s)}\mathbb{I}_i (s,a)z_i
 \end{equation}
