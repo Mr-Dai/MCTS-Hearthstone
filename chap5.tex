@@ -8,7 +8,7 @@
 在多臂赌博机问题中，参与者需要在若干个随机出奖的赌博机之间进行选择，而使用~UCB1~算法能确保参与者在足够多次的尝试后获得最高的收益。
 
 UCB1~算法的基本过程如下所述：
-\begin{itemize}
+\begin{description}
 \item[初始化] 对每个赌博机各尝试一次；
 \item[循环] 选取使得公式
 \begin{equation}
@@ -16,7 +16,7 @@ UCB1~算法的基本过程如下所述：
 \bar{x}_j + C\sqrt{\frac{\ln n}{n_j}}
 \end{equation}
 最大化的赌博机$j$进行尝试。其中$\bar{x}_j$为赌博机$j$过往的平均收益，$C$为一个$0$和$1$之间的常数，决定搜索算法尝试其他赌博机的可能性大小；$n_j$为赌博机$j$过去被尝试的次数，$n=\sum_i n_i$为尝试次数的总和。
-\end{itemize}
+\end{description}
 
 根据~UCB1~算法的基本过程，将其应用于炉石传说也并非难事。蒙特卡洛智能体的决策过程基本如下：
 \begin{enumerate}
