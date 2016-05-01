@@ -221,13 +221,7 @@ UCT~Ëã·¨Ê£ÓàµÄ²¿·ÖÓë~\ref{section:MCTSdef}~½ÚµÄÃèÊö»ù±¾ÏàÍ¬£ºÔÚËÑË÷Ëã·¨´Ó¸ù½áµãÍ
   \State add a new child $v'$ to $v$ with $s(v') = f(s(v),a)$ and  $a(v') = a$
   \State \Return $v'$
 \EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}
-\caption{UCT~Ëã·¨£¨Part 2£©}
-\label{alg:UCT2}
-\begin{algorithmic}
+\State
 \Function{TreePolicy}{$v$}
   \While{$v$ is nonterminal}
     \If{$v$ not fully expanded}
@@ -247,6 +241,13 @@ UCT~Ëã·¨Ê£ÓàµÄ²¿·ÖÓë~\ref{section:MCTSdef}~½ÚµÄÃèÊö»ù±¾ÏàÍ¬£ºÔÚËÑË÷Ëã·¨´Ó¸ù½áµãÍ
   \State \Return reward for state $s$
 \EndFunction
 \State
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{UCT~Ëã·¨£¨Part 2£©}
+\label{alg:UCT2}
+\begin{algorithmic}
 \Function{BackUp}{$v,\vartriangle$}
   \While{$v$ is not null}
     \State $N(v) \gets N(v) + 1$
