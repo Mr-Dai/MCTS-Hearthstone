@@ -91,9 +91,10 @@ UCB1 = \bar{X}_j + \sqrt{\frac{2\ln n}{n_j}}
 \label{fig:minimax}
 \end{figure}
 
-极小极大值算法计算收益值的方式如下公式：
+公式~\ref{eq:minimax}~给出了极小极大值算法计算收益值的方式。
 
-\begin{displaymath}
+\begin{equation}
+\label{eq:minimax}
 \begin{array}{l}
 \textsc{Minimax-Value}(n)= \\
 \left\{
@@ -104,7 +105,7 @@ UCB1 = \bar{X}_j + \sqrt{\frac{2\ln n}{n_j}}
 \end{array}
 \right.
 \end{array}
-\end{displaymath}
+\end{equation}
 
 简单而言，我方优势越大，终止态的效用越高。代表我方行动的博弈树结点会被标记为~MAX~结点，其效用值等于其所有子结点效用值的最大值；代表地方行动的博弈树结点被标记为~MIN~结点，其效用值等于其所有子结点效用值的最小值。
 这么做相当于考虑对手总是会以最优的决策进行游戏，以此来提高根节点直接子节点所代表的操作的期望收益的可靠性。
