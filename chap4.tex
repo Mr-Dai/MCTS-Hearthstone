@@ -78,123 +78,136 @@
 首先，本节将详细介绍强度稍高的专家规则智能体所使用的启发知识细节。
 
 \begin{algorithm}
-\caption{规则智能体决策方法~produceMove}
+\caption{规则智能体决策方法~\textsc{ProduceMove}}
 \label{alg:produceMove}
 \begin{algorithmic}[1]
-\STATE $S \gets \text{current game state}$
-\STATE
-\STATE $A = \text{action sequence} \gets \emptyset$
-\STATE $a \gets \text{null}$
-\REPEAT
-  \STATE $a \gets playCard(S)$
-  \IF{$a = \text{null}$}
-    \STATE $a \gets attack(S)$
-  \ENDIF
-  \IF{$a = \text{null}$}
-    \STATE $a \gets playHeroPower(S)$
-  \ENDIF
-  \IF{$a \neq \text{null}$}
-    \STATE $A \gets A \cup a$
-  \ENDIF
-\UNTIL{$a = \text{null}$}
-\RETURN $A$
+\Function{ProduceMove}{$S$}
+  \State $S \gets \text{current game state}$
+  \State
+  \State $A = \text{action sequence} \gets \emptyset$
+  \State $a \gets \text{null}$
+  \Repeat
+    \State $a \gets $ \Call{PlayCard}{$S$}
+    \If{$a = \text{null}$}
+      \State $a \gets $ \Call{Attack}{$S$}
+    \EndIf
+    \If{$a = \text{null}$}
+      \State $a \gets $ \Call{PlayHeroPower}{$S$}
+    \EndIf
+    \If{$a \neq \text{null}$}
+      \State $A \gets A \cup a$
+    \EndIf
+  \Until{$a = \text{null}$}
+  \State \Return $A$
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
-函数~produceMove~（算法~\ref{alg:produceMove}）作为规则智能体产生操作序列的主框架。首先，~produceMove~会获取到当前的游戏状态，并依次进行手牌使用、随从攻击和使用英雄能力的决策。
-其中，~playCard~、~attack~和~playHeroPower~函数分别用于这三种决策。在完全枚举所有可进行的操作后，~produceMove~将返回当前的操作序列$A$。
+函数~\textsc{ProduceMove}~（算法~\ref{alg:produceMove}）作为规则智能体产生操作序列的主框架。首先，~\textsc{ProduceMove}~会获取到当前的游戏状态，并依次进行手牌使用、随从攻击和使用英雄能力的决策。
+其中，~\textsc{PlayCard}~、~\textsc{Attack}~和~\textsc{PlayHeroPower}~函数分别用于这三种决策。在完全枚举所有可进行的操作后，~\textsc{ProduceMove}~将返回当前的操作序列$A$。
 
 \begin{algorithm}
-\caption{使用手牌~playCard}
+\caption{使用手牌~\textsc{PlayCard}}
 \label{alg:playCard}
 \begin{algorithmic}[1]
-\STATE $S \gets \text{current game state}$
-\STATE $P_A \gets \text{current active player}$
-\STATE $P_O \gets \text{opponent of } P_A$
-\STATE
-\STATE $A_O = (\text{opponent attackers}) \gets (A_1/H_1, A_2/H_2,\ldots,A_m/H_m)$
-\STATE
-\IF{$\sum_i{A_i} \geq P_A.hero.health$}
-  \RETURN $playEmergencyCard(S)$ if it is not null
-\ENDIF
-\STATE
-\STATE $C_M = (\text{minion cards in the hand of } P_A) \gets (C_1, C_2,\ldots C_n)$ \\ \,\,\, where $C_1.cost \geq C_2.cost \geq \ldots \geq C_n.cost$
-\STATE
-\FORALL{$C_i$ in $C_M$}
-  \IF{$C_i.cost \leq P_A.mana$}
-    \RETURN play minion card $C_i$
-  \ENDIF
-\ENDFOR
-\STATE
-\RETURN null
+\Function{PlayCard}{$s$}
+  \State $S \gets \text{current game state}$
+  \State $P_A \gets \text{current active player}$
+  \State $P_O \gets \text{opponent of } P_A$
+  \State
+  \State $A_O = (\text{opponent attackers}) \gets (A_1/H_1, A_2/H_2,\ldots,A_m/H_m)$
+  \State
+  \If{$\sum_i{A_i} \geq P_A.hero.health$}
+    \State \Return \Call{PlayEmergencyCard}{$S$} if it is not null
+  \EndIf
+  \State
+  \State $C_M = (\text{minion cards in the hand of } P_A) \gets (C_1, C_2,\ldots C_n)$ 
+  \Statex where $C_1.cost \geq C_2.cost \geq \ldots \geq C_n.cost$
+  \State
+  \For{$C_i$ \textbf{in} $C_M$}
+    \If{$C_i.cost \leq P_A.mana$}
+      \State \Return play minion card $C_i$
+    \EndIf
+  \EndFor
+  \State
+  \State \Return null
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
-函数~playCard~（算法~\ref{alg:playCard}）用于产生使用手牌的决策。首先，在$5\sim 9$行，~playCard~会首先计算对方所有可攻击角色的攻击力总和，并将结果与我方英雄剩余生命值进行比较。
-如果敌方攻击力总和超过了我方英雄剩余生命值，意味着对方在下一个回合就能将我方击败，那么~playCard~就会调用~playEmergencyCard~函数，产生用于自保的手牌使用方式。
-当~playEmergencyCard~函数不能给出任何自保方式时，~playCard~便会采取原本的出牌策略继续进行，留由后面的~attack~函数和~playHeroPower~函数来化除险境。
-在$11\sim 17$行，~playCard~函数会选择手牌中可用的法力消耗最高的随从卡，并使用该卡。如果手牌中不存在任何可用的随从卡，~playCard~函数则会返回~null~，表示所有可进行的手牌使用已枚举完毕。
+函数~\textsc{PlayCard}~（算法~\ref{alg:playCard}）用于产生使用手牌的决策。首先，在$5\sim 9$行，~\textsc{PlayCard}~会首先计算对方所有可攻击角色的攻击力总和，并将结果与我方英雄剩余生命值进行比较。
+如果敌方攻击力总和超过了我方英雄剩余生命值，意味着对方在下一个回合就能将我方击败，那么~\textsc{PlayCard}~就会调用~\textsc{PlayEmergencyCard}~函数，产生用于自保的手牌使用方式。
+当~\textsc{PlayEmergencyCard}~函数不能给出任何自保方式时，~\textsc{PlayCard}~便会采取原本的出牌策略继续进行，留由后面的~\textsc{Attack}~函数和~\textsc{PlayHeroPower}~函数来化除险境。
+在$11\sim 17$行，~\textsc{PlayCard}~函数会选择手牌中可用的法力消耗最高的随从卡，并使用该卡。如果手牌中不存在任何可用的随从卡，~\textsc{PlayCard}~函数则会返回~null~，表示所有可进行的手牌使用已枚举完毕。
 
 \begin{algorithm}
-\caption{使用手牌进行自保~playEmergencyCard}
+\caption{使用手牌进行自保~\textsc{PlayEmergencyCard}}
 \label{alg:playEmergencyCard}
 \begin{algorithmic}[1]
-\STATE $S \gets \text{current game state}$
-\STATE $P_A \gets \text{current active player}$
-\STATE $C_{Mt} = (\text{taunt minion cards in the hand of } P_A) \gets (C_1, C_2,\ldots C_n)$ \\ \,\,\, where $C_1.cost \geq C_2.cost \geq \ldots \geq C_n.cost$
-\STATE
-\FORALL{$C_i$ in $C_{Mt}$}
-  \IF{$C_i.cost \leq P_A.mana$}
-    \RETURN play minion card $C_i$
-  \ENDIF
-\ENDFOR
-\STATE
-\RETURN null
+\Function{PlayEmergencyCard}{$s$}
+  \State $S \gets \text{current game state}$
+  \State $P_A \gets \text{current active player}$
+  \State $C_{Mt} = (\text{taunt minion cards in the hand of } P_A) \gets (C_1, C_2,\ldots C_n)$ 
+  \Statex where $C_1.cost \geq C_2.cost \geq \ldots \geq C_n.cost$
+  \State
+  \For{$C_i$ \textbf{in} $C_{Mt}$}
+    \If{$C_i.cost \leq P_A.mana$}
+      \State \Return play minion card $C_i$
+    \EndIf
+  \EndFor
+  \State
+  \State \Return null
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
-函数~playEmergencyCard~（算法~\ref{alg:playEmergencyCard}）用于在检测到敌方可攻击角色的攻击力综合超过我方英雄剩余生命值时，使用现有的手牌进行自保。
-~playEmergencyCard~本身的逻辑十分简单，仅仅只是选择手牌中可用的法力消耗最高的嘲讽随从并打出。嘲讽随从的存在可以使得敌方角色无法直接攻击我方英雄，
+函数~\textsc{PlayEmergencyCard}~（算法~\ref{alg:playEmergencyCard}）用于在检测到敌方可攻击角色的攻击力综合超过我方英雄剩余生命值时，使用现有的手牌进行自保。
+~\textsc{PlayEmergencyCard}~本身的逻辑十分简单，仅仅只是选择手牌中可用的法力消耗最高的嘲讽随从并打出。嘲讽随从的存在可以使得敌方角色无法直接攻击我方英雄，
 以此便能达到保护我方英雄的目的。
 
 \begin{algorithm}
-\caption{角色攻击~attack}
+\caption{角色攻击~\textsc{Attack}}
 \label{alg:attack}
 \begin{algorithmic}[1]
-\STATE $S \gets \text{current game state}$
-\STATE
-\STATE $As = (\text{friendly attackers}) \gets (A_1/H_1, A_2/H_2,\ldots,A_m/H_m)$ \\ where $A_1 \geq A_2 \geq \ldots \geq A_m$
-\STATE
-\IF{$As$ is empty}
-  \RETURN null
-\ENDIF
-\STATE
-\STATE $Ts = (\text{enemy taunt minions}) \gets (a_1/h_1, a_2/h_2,\ldots,a_n/h_n)$ \\ where $h_1 \geq h_2 \geq \ldots \geq h_m$
-\IF{$Ts$ is empty}
-  \STATE $Ts = (\text{enemy dangerous minions})$
-\ENDIF
-\IF{$Ts$ is empty}
-  \STATE $Ts = (\text{all enemy targets})$
-\ENDIF
-\STATE
+\Function{Attack}{$s$}
+  \State $S \gets \text{current game state}$
+  \State
+  \State $As = (\text{friendly attackers}) \gets (A_1/H_1, A_2/H_2,\ldots,A_m/H_m)$ 
+  \Statex where $A_1 \geq A_2 \geq \ldots \geq A_m$
+  \State
+  \If{$As$ is empty}
+    \State \Return null
+  \EndIf
+  \State
+  \State $Ts = (\text{enemy taunt minions}) \gets (a_1/h_1, a_2/h_2,\ldots,a_n/h_n)$
+  \Statex where $h_1 \geq h_2 \geq \ldots \geq h_m$
+  \If{$Ts$ is empty}
+    \State $Ts = (\text{enemy dangerous minions})$
+  \EndIf
+  \If{$Ts$ is empty}
+    \State $Ts = (\text{all enemy targets})$
+  \EndIf
+  \State
 
-\IF{there is $T \subseteq Ts$ with $h_j \leq A_1$ (for all $a_j/h_j \in T$)}
-  \RETURN attack $\{a_j/h_j|a_j/h_j \in M \wedge h_j = max(h_1,h_2,...) \text{for all } a_k/h_k \in M\}$ with $A_1/H_1$
-\ENDIF
-
-\RETURN attack enemy hero with $A_1/H_1$
+  \If{there is $T \subseteq Ts$ with $h_j \leq A_1$ (for all $a_j/h_j \in T$)}
+    \State \Return attack $\{a_j/h_j|a_j/h_j \in M \wedge h_j = max(h_1,h_2,...) $
+    \Statex for all $a_k/h_k \in M$ with $A_1/H_1$
+  \EndIf
+  \State
+  \State \Return attack enemy hero with $A_1/H_1$
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
-函数~attack~（算法~\ref{alg:attack}）用于枚举随从与英雄的攻击动作。在第~5~行，~attack~函数会首先获取所有可进行攻击的友方角色，并对其按攻击力进行降序排序。
-第~$6\sim8$~行用于判断边界情况：当不存在任何可进行攻击的角色时，意味着~attack~函数已完成所有角色攻击决策的枚举，因此返回~null~。
-第~$9\sim 15$~行用于枚举所有可攻击的敌方目标。首先~attack~函数会尝试获取可攻击的敌方嘲讽随从，若不存在，则尝试攻击敌方威胁较大的随从。
+函数~\textsc{Attack}~（算法~\ref{alg:attack}）用于枚举随从与英雄的攻击动作。在第~5~行，~\textsc{Attack}~函数会首先获取所有可进行攻击的友方角色，并对其按攻击力进行降序排序。
+第~$6\sim8$~行用于判断边界情况：当不存在任何可进行攻击的角色时，意味着~\textsc{Attack}~函数已完成所有角色攻击决策的枚举，因此返回~null~。
+第~$9\sim 15$~行用于枚举所有可攻击的敌方目标。首先~\textsc{Attack}~函数会尝试获取可攻击的敌方嘲讽随从，若不存在，则尝试攻击敌方威胁较大的随从。
 如何定义某个敌方随从对我方“威胁较大”是比较复杂的问题。本文仅将攻击力超过一定阈值的随从视作威胁较大的随从。
 若依旧不存在威胁较大的随从时，则将所有敌方目标选定为可攻击的备选目标。第~$17\sim20$~行将从攻击力最高的我方角色开始，为其选定最优的攻击目标。
-首先在第~$17\sim19$行，~attack~函数会尝试获取一个该我方角色可以杀死的生命值最大的敌方随从，并指定我方角色攻击该目标。
+首先在第~$17\sim19$行，~\textsc{Attack}~函数会尝试获取一个该我方角色可以杀死的生命值最大的敌方随从，并指定我方角色攻击该目标。
 如果不存在这样的目标，即该我方角色无法直接杀死任何敌方角色，第~20~行则会直接指定我方角色攻击敌方英雄，以求通过激进地压低敌方生命值为对方增加压力，从而拉大优势、赢得对局。
 
-最终，~produceMove~函数调用~playHeroPower~函数，在仍有剩余法力值的情况下使用英雄能力。
+最终，~\textsc{ProduceMove}~函数调用~\textsc{PlayHeroPower}~函数，在仍有剩余法力值的情况下使用英雄能力。
 
 正如前文所述，炉石传说是很复杂的游戏，如此简单的规则智能体固然无法与人类玩家相提并论。不难看出，该规则智能体只能对随从卡牌做出反应，
 法术卡牌与武器卡牌都不会被规则智能体使用。这么做的原因在于，炉石传说中的武器卡牌和法术卡牌变化度极大，卡牌之间的共同性极小，
@@ -213,8 +226,8 @@
 相比于专家规则智能体，随机规则智能体的改动如下：
 
 \begin{itemize}
-\item produceMove：作为规则智能体产生决策的主框架函数，随机规则智能体无需对~produceMove~函数做出修改。随机规则智能体仍将以相同的顺序产生决策。
-\item playCard：随机规则智能体在进入~playCard~函数后，有 $50\%$ 的可能性使其随机地使用卡牌。具体的做法是在所有可用的手牌中随机选择一张并使用。
-\item attack：随机规则智能体在进入~attack~函数后，有 $50\%$ 的可能性使其随机地为我方角色指派攻击目标。具体的做法是，首先被选中的我方角色有 $50\%$ 的可能选择不攻击；选择攻击时，攻击的目标也会随机地进行选择。
-\item playHeroPower：随机规则智能体的~playHeroPower~函数未做任何改动。
+\item \textsc{ProduceMove}：作为规则智能体产生决策的主框架函数，随机规则智能体无需对~\textsc{ProduceMove}~函数做出修改。随机规则智能体仍将以相同的顺序产生决策。
+\item \textsc{PlayCard}：随机规则智能体在进入~\textsc{PlayCard}~函数后，有 $50\%$ 的可能性使其随机地使用卡牌。具体的做法是在所有可用的手牌中随机选择一张并使用。
+\item \textsc{Attack}：随机规则智能体在进入~\textsc{Attack}~函数后，有 $50\%$ 的可能性使其随机地为我方角色指派攻击目标。具体的做法是，首先被选中的我方角色有 $50\%$ 的可能选择不攻击；选择攻击时，攻击的目标也会随机地进行选择。
+\item \textsc{PlayHeroPower}：随机规则智能体的~\textsc{PlayHeroPower}~函数未做任何改动。
 \end{itemize}

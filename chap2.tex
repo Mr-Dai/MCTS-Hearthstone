@@ -25,7 +25,7 @@ Ginsberg曾利用这样的蒙特卡洛方法开发出了能与世界级选手相竞的桥牌人工智能\cite{gi
 赌博机问题（bandit problems）是概率论中的经典问题。
 问题给定$K$个操作（例如，$K$个不同的赌博机），要求参与者在这些操作中进行选择，以使得在重复选取最优收益后获取最高的累计收益。
 每个操作所对应的收益分布是未知的，这使得参与者难以在这些操作中进行选择，而他只能通过曾经进行的尝试的结果来估算每个操作背后可能对应的收益。
-这就产生了经典的穷尽-探索困境（exploitation-exploration dillemma）：
+这就产生了经典的穷尽-探索困境（exploitation-exploration dilemma）：
 参与者必须在“穷尽（exploitation）当前已知的最优操作”与“探索（exploration）其他现在不是最优但有可能在多次模拟后成为最优操作的操作”之间进行取舍。
 
 一个$K$臂赌博机可被定义为随机变量$X_{i,n}$，其中$i \in [1, K]$代表第$i$个赌博机（赌博机的第$i$个“臂”）\cite{auer2002finite,kocsis2006bandit,kocsis2006improved}，
@@ -47,7 +47,7 @@ R_N = \mu ^* n - \mu _j \sum_{j=1}^K\mathbb{E}[T_j(n)]
 \subsection{置信上界}
 \label{section:UpperConfidenceBound}
 
-为了解决$K$臂赌博机问题，搜索算法有必要引入置信上界，因为在任何时候，任何一个赌博机都可能是最优的赌博机。
+为了解决~$K$~臂赌博机问题，搜索算法有必要引入置信上界，因为在任何时候，任何一个赌博机都可能是最优的赌博机。
 由Auer et al提出的名为UCB1的策略\cite{auer2002finite}可以在未预先设置任何与收益分布有关的启发知识的情况下使玩家的后悔程度随尝试次数$n$呈对数级增长（$O(\ln n)$）。
 该策略在每次选取赌博机时都会按照给定的公式为每个赌博机计算其对应的值，并选取所对应的值最大的赌博机。该公式定义如下：
 \begin{equation}
@@ -56,3 +56,212 @@ UCB1 = \bar{X}_j + \sqrt{\frac{2\ln n}{n_j}}
 其中$\bar{X}_j$为第$j$个赌博机的平均收益，$n_j$为第$j$个赌博机被尝试的次数，$n$为尝试的总次数。
 不难看出，收益项$\bar{X}_j$鼓励搜索算法穷尽（exploitation）目前平均收益最高的赌博机，而$\sqrt{\frac{2\ln n}{n_j}}$项则鼓励搜索算法探索（exploration）其他尝试次数较少的赌博机。
 
+\section{蒙特卡洛搜索}
+\label{section:MonteCarloSearch}
+
+在了解了赌博机问题以及用于解决赌博机问题的~UCB1~算法后，蒙特卡洛搜索算法的定义就变得十分清晰了。实际上，蒙特卡洛搜索的基本思路就是将给定的一系列可选操作视作~$K$~臂赌博机问题，
+通过大量的随机采样集合类似~UCB1~的算法来近似每个可选操作的期望收益，最终选出期望收益最高的操作。使用~UCB1~算法的蒙特卡洛搜索的基本流程如下：
+
+\begin{description}
+\item[初始化] 对每个赌博机各尝试一次；
+\item[循环] 选取使得公式
+\begin{equation}
+\label{eq:UCB1}
+\bar{x}_j + C\sqrt{\frac{\ln n}{n_j}}
+\end{equation}
+最大化的赌博机$j$进行尝试。其中$\bar{x}_j$为赌博机$j$过往的平均收益，$C$为一个$0$和$1$之间的常数，决定搜索算法尝试其他赌博机的可能性大小；$n_j$为赌博机$j$过去被尝试的次数，$n=\sum_i n_i$为尝试次数的总和。
+\end{description}
+
+\section{蒙特卡洛树搜索}
+\label{section:MonteCarloTreeSearch}
+
+蒙特卡洛搜索算法的缺陷在于，它只能枚举出当前玩家当前可选的所有操作，并通过随机或启发式的模拟采样来近似这些操作的期望收益。实际上，启发式或随机的模拟都无法对对手的行为进行准确的预测。
+尽管大量的随机采样可以确保所得期望收益在某种意义上算是比较可靠。但这样的期望收益是考虑到对手所有可能采用的策略后得出的结果，而实际上对手只会使用其中少数几种行为策略，因此这样得出的期望收益反而是不准确的。
+由此，蒙特卡洛搜索算法实际上无法对对手的行为作出准确预测，其决策的强度也因此有所降低。
+
+\subsection{极小极大值算法与博弈树}
+
+传统的人工智能算法多依赖树状结构来考虑对手可能的行为。这样的算法包括了经典的极小极大值算法。极小极大值算法将构造一棵完整的博弈树。每个结点代表着一个游戏状态，其子节点代表着当前玩家在当前状态下可以进行的所有操作。
+整棵博弈树会不断地向下延伸，直到叶子节点进入游戏的终止状态（已分出胜负）。此时，极小极大值算法依赖一个预定义的效用函数对终止状态（叶子节点）进行估价，进而根据终止态的价值计算从根结点到该叶子结点的路径上的结点的估价。
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=4in]{img/minimax.png}
+\caption{极小极大树}
+\label{fig:minimax}
+\end{figure}
+
+极小极大值算法计算收益值的方式如下公式：
+
+\begin{displaymath}
+\begin{array}{l}
+\textsc{Minimax-Value}(n)= \\
+\left\{
+\begin{array}{ll}
+\textsc{Utility}(n) & \text{if } n \text{ is terminal state} \\
+\textsc{max}_{s~\in~\textsc{Successors}(n)} \textsc{Minimax-Value}(s) & \text{if } n \text{ is MAX node} \\
+\textsc{min}_{s~\in~\textsc{Successors}(n)} \textsc{Minimax-Value}(s) & \text{if } n \text{ is MIN node}
+\end{array}
+\right.
+\end{array}
+\end{displaymath}
+
+简单而言，我方优势越大，终止态的效用越高。代表我方行动的博弈树结点会被标记为~MAX~结点，其效用值等于其所有子结点效用值的最大值；代表地方行动的博弈树结点被标记为~MIN~结点，其效用值等于其所有子结点效用值的最小值。
+这么做相当于考虑对手总是会以最优的决策进行游戏，以此来提高根节点直接子节点所代表的操作的期望收益的可靠性。
+
+然而，极小极大值算法的缺陷在于，它首先必须完整地构造出整棵博弈树。对于像井字棋这样的状态较少的游戏固然是无足轻重，但对于现代游戏来说，游戏的状态数量往往是极大的，完整构造整棵博弈树是不现实的。
+除此之外，极小极大值算法还依赖于一个对终止状态进行估价的效用函数。同样，对于复杂的现代游戏来说，开发一个准确的效用函数是极为困难的。好处在于，极小极大值算法和博弈树相结合，确实能使智能体考虑对手可能进行的操作了。
+那么有没有可能即保留极小极大值算法的优点，又摒弃它的缺点呢？答案就是蒙特卡洛树搜索。
+
+\subsection{蒙特卡洛树搜索算法的基本流程}
+\label{section:MCTSdef}
+
+蒙特卡洛树搜索算法（Monte Carlo Tree Search）实为将蒙特卡洛搜索算法与博弈树相结合而成的算法。比起像极大极小值那般依赖效用函数来得出期望收益，蒙特卡洛树搜索算法将每个结点及其子节点均视作~$K$~臂赌博机问题，
+使用蒙特卡洛搜索的思想得出子节点的期望收益。因此，蒙特卡洛树搜索算法的核心思想依然是基于大量的随机采样来对结点的期望收益进行近似。
+
+蒙特卡洛树搜索的基本流程包括不断循环进行的迭代（选择结点并随机采样），并在迭代的过程中渐渐扩展已有的博弈树。如同蒙特卡洛搜索，迭代循环会一直持续，直到达成某些预定义的条件为止。
+树中的每个结点依然代表每个不同的游戏状态，其所有的子结点则代表当前玩家在当前状态下所有可进行的操作所导致的下一个游戏状态。蒙特卡洛树搜索的一个循环可以被分为如下四步\cite{chaslot2008monte}：
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{img/mcts-iter.jpg}
+\caption{蒙特卡洛树搜索的迭代循环}
+\label{fig:mcts-iter}
+\end{figure}
+
+\begin{enumerate}
+\item \textbf{选择}：从根节点开始，蒙特卡洛树搜索会递归地在每层都使用预定义的树策略（Tree Policy）选择一个子节点，并进入该子节点，直到找到一个可扩展的结点。如果一个结点并不代表非终结状态，且仍有未发现的子结点，那么我们说这个节点是可扩展的。
+\item \textbf{扩展}：根据当前玩家在当前叶子结点所代表的游戏状态下可进行的所有操作，为该结点产生子结点。
+\item \textbf{模拟}：使用预定义的模拟策略（Default Policy）对这些新添加的子结点进行模拟，一直模拟到游戏结束并根据模拟结果产生出效用值。
+\item \textbf{反向传播}：从该子结点开始，将其模拟结果一直向上传播，直到传播至根节点。
+\end{enumerate}
+
+算法的过程涉及到了两个蒙特卡洛树搜索所使用的策略：
+
+\begin{enumerate}
+\item \textbf{树策略}：树策略用于选择需要扩展的结点。当给定一个结点时，树策略首先判断该结点是否需要扩展。如无需扩展，即该结点所有子结点已被发现，那么树策略将从所有的子结点中选择一个结点，指导蒙特卡洛树搜索沿该子结点继续向下寻找。
+\item \textbf{模拟策略}：蒙特卡洛树搜索在对选定子结点进行模拟时使用的策略。蒙特卡洛树搜索会使用该策略一直模拟至游戏结束。通常会使用完全随机的智能体作为模拟策略，但在模拟策略中加入一定的启发知识也有可能提升智能体的表现。
+\end{enumerate}
+
+值得注意的是，蒙特卡洛树搜索对于博弈树的构建是不完全的，是非对称的（asymmetric）。蒙特卡洛树搜索会通过预定义的树策略，找寻到整棵博弈树中相对有价值的部分，并只对该部分进行探索，其它被认定为没有价值的子树则完全不会被构建。
+最终的效果便是整棵博弈树会偏向比较有价值的方向进行生长。
+由此，蒙特卡洛树搜索便有效规避了博弈树过大的风险。不过，尽管如此，随着扩展层数的增加，树的结点数依然会呈指数级增长，因此蒙特卡洛树在扩展到一定程度后便需要停止扩展。
+除此之外，蒙特卡洛树的结构本身在某种程度上也能反映智能体对游戏的理解，我们也许也能从中获取关于游戏本身的有用信息。
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=4in]{img/mcts-tree.jpg}
+\caption{蒙特卡洛树搜索算法构建的非对称博弈树}
+\label{fig:mcts-tree}
+\end{figure}
+
+
+作为蒙特卡洛搜索的延伸算法，蒙特卡洛树搜索保留了蒙特卡洛搜索非启发的特点：整个算法不依赖任何游戏特定知识，也不依赖任何用于对局面进行估价的效用函数。只要游戏状态的转换可以被构造成树状结构，
+蒙特卡洛树搜索可以在不做改动的情况下应用于任何游戏。实际上，尽管完整构建博弈树的极小极大值算法显得不现实，但从理论层面来讲，极小极大值算法给出的答案确实是真正的最优解。无奈的是，
+即便是优化过后的有限深度的极小极大值算法依然过于依赖效用函数。对于像国际象棋这种在很多年前便已研发出可靠的效用函数的游戏固然是最好的，但对于像围棋或是炉石传说这样难以开发效用函数的游戏，
+极小极大值算法便变得不可能了。
+
+尽管蒙特卡洛树搜索确实可以完全脱离启发知识的存在，但加入特定的启发知识往往可以使算法在性能和表现上获得极大地提升。事实上，现在大多数的顶级围棋人工智能都加入了一定的启发知识，
+这些启发知识往往都是可以通过棋盘的模式进行判断的机器学习算法\cite{silver2016mastering}。这些启发知识并不需要是完备的，因为蒙特卡洛树搜索的随机采样特性能够弥补这一点。
+启发知识的加入只是为了让蒙特卡洛树搜索在进行决策时能更好地偏向那些看起来更“合理”的选择。尽管如此，启发知识的加入仍然是有代价的：完全随机的模拟采样保证了模拟时的效率，
+而启发知识的加入往往会大幅降低模拟的效率。除此之外，启发知识的加入也会使得蒙特卡洛树搜索的结果产生偏差，具体是向好的方向偏还是不好的方向偏则取决于加入的启发知识是否能够很好的反应实际的情况。
+如果加入的启发知识无法准确地反映真实情况，启发知识的加入反而会降低蒙特卡洛树搜索的决策强度。因此，应加入何种程度的启发知识也是值得研究的方向，本文的实验部分也会针对这个问题进行相关测试。
+
+除此之外，蒙特卡洛树搜索仍然保留了蒙特卡洛搜索的随时性（anytime）：每一次模拟的结果都将会被立刻反向传播至根节点，这保证了在任何一次迭代结束后，所有结点所得的期望收益都是最新的。
+由此，蒙特卡洛树搜索确保了智能体可以在任何时候结束迭代并返回当前看起来最可靠的操作，尽管进行更多的迭代往往能够更进一步提升其所得的结果。
+
+\subsection{UCB1~算法的蒙特卡洛树应用：UCT~算法}
+
+如~\ref{section:MCTSdef}~节所述，蒙特卡洛树搜索的核心思想在于通过大量的随机采样来近似求得当前状态可进行所有操作的期望收益。在重复迭代的过程中，蒙特卡洛树搜索会不断地扩展已有的博弈树，
+以实现对完整博弈树的局部搜索，如图~\ref{fig:mcts-iter}~与图~\ref{fig:mcts-tree}~所示。具体一棵博弈树会以怎样的方式被构建取决于蒙特卡洛树搜索在迭代的过程中如何选择进行扩展的结点，也即是其所使用树策略的具体实现。
+在将每一次选取子结点进行深入探索视为独立的多臂赌博机问题的过程中，蒙特卡洛树搜索通过使用多次的蒙特卡洛模拟来近似求得每个子结点的期望收益，也正对应着每个赌博机所拥有的拥有未知分布规则的随机奖励。
+
+~\ref{section:BanditBasedMethods}~节提到了使用~UCB1~算法结合蒙特卡洛模拟来解决多臂赌博机问题（蒙特卡洛搜索）。~UCB1~算法本身简单高效，同时也确保了后悔程度随尝试次数的增长处于最优增长率的常数倍数范围内（$O(\ln n)$）。
+因此，~UCB1~算法的这些特性也使得它适合用于解决蒙特卡洛树搜索中的多臂赌博机问题，而在蒙特卡洛树搜索中，每一次的子结点选取都可被视为多臂赌博机问题。
+由此，UCT~算法（Upper Confidence Bounds for Trees）作为~UCB1~算法与蒙特卡洛树搜索的结合诞生了。
+
+UCT~算法在本质上与~UCB1~算法的区别并不大：在给定一系列的子结点时，~UCT~算法将选取使得如下公式所得值最大化的子结点~$j$：
+\begin{equation}
+\label{eq:UCT}
+UCT = \bar{X_j} + 2C_p\sqrt{\frac{2\ln n}{n_j}}
+\end{equation}
+其中~$n$~为当前结点（父结点）曾被访问的次数，$n_j$~为子结点~$j$~曾被访问的次数，而~$C_p$~为一个大于~$0$~的常数。该公式与~UCB1~算法的公式~\ref{eq:UCB1}~相比并无太大的变化，
+它仍然可以通过调整~$C_p$~变量的值来改变算法在探索与穷尽之间的取舍。在多数情况下，$C_p$~可被直接设为~$1 / \sqrt{2}$~\cite{kocsis2006improved}。
+
+UCT~算法剩余的部分与~\ref{section:MCTSdef}~节的描述基本相同：在搜索算法从根结点通过公式~\ref{eq:UCT}~找到可扩展的结点后，搜索算法便会对该结点进行扩展。
+而后，搜索算法会使用预设的模拟策略为新添加的子节点进行模拟直到游戏结束。最后，游戏结束后的终止状态对应的收益会沿博弈树反向传播至根节点。
+
+来自\cite{browne2012survey}的算法~\ref{alg:UCT1}~和算法~\ref{alg:UCT2}~为~UCT~算法基本过程的伪代码。其中，每个结点~$v$~包含~4~个相关变量，包括：其对应的游戏状态~$s(v)$~、进入该结点所需进行的操作~$a(v)$~、
+总模拟收益~$Q(v)$~和曾经的访问次数~$N(v)$~。项~$\vartriangle(v,p)$~代表收益向量~$\vartriangle$~中属于玩家~$p$~和结点~$v$~的元素。主函数~\textsc{UctSearch}~的返回值为~$a(\textsc{BestChild}(v_0,0)$，
+即为通往最高收益子结点的操作~$a$~。尽管如此，蒙特卡洛树搜索也可以选择返回访问次数最多的子结点而不是收益最高的子结点，尽管在多数情况下这两种方式都会指向同一个结点。
+算法~\ref{alg:UCT2}~给出了蒙特卡洛树搜索反向传播的伪代码，其中~\textsc{BackUp}~函数为常规的反向传播方式，而~\textsc{BackUpNegamax}~函数则适用于由两个互相敌对的玩家进行轮流操作的零和游戏，如炉石传说。
+~\textsc{BackUpNegamax}~函数通过在结点层数变换时反转模拟收益~$\vartriangle$~，使得每一层的结点所对应的期望收益均对应于智能体所代表的玩家的收益，而不是当前玩家的收益。
+于此，蒙特卡洛树搜索便拥有类似极小极大值算法的模拟对手的能力了。
+
+\begin{algorithm}
+\caption{UCT~算法（Part 1）}
+\label{alg:UCT1}
+\begin{algorithmic}[lines]
+\Function{UctSearch}{$s_0$}
+  \State create root node $v_0$ with state $s_0$
+  \While{within computational budget}
+    \State $v_l \gets $ \Call{TreePolicy}{$v_0$}
+    \State $\vartriangle \gets $ \Call{DefaultPolicy}{$s(v_l)$}
+    \Call{BackUp}{$v_0,0$}
+  \EndWhile
+  \State \Return $a$(\Call{BestChild}{$v_0,0$})
+\EndFunction
+\State
+\Function{BestChild}{$v,c$}
+  \State \Return $\max_{v' \in \text{ children of } v} \frac{Q(v')}{N(v')} + c\sqrt{\frac{2\ln N(v)}{N(v')}}$
+\EndFunction
+\State
+\Function{Expand}{$v$}
+  \State choose $a \in $ untried actions from $A(s(v))$
+  \State add a new child $v'$ to $v$ with $s(v') = f(s(v),a)$ and  $a(v') = a$
+  \State \Return $v'$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{UCT~算法（Part 2）}
+\label{alg:UCT2}
+\begin{algorithmic}
+\Function{TreePolicy}{$v$}
+  \While{$v$ is nonterminal}
+    \If{$v$ not fully expanded}
+      \State \Return \Call{Expand}{$v$}
+    \Else
+      \State $v \gets $ \Call{BestChild}{$v,C_p$}
+    \EndIf
+  \EndWhile
+  \State \Return $v$
+\EndFunction
+\State
+\Function{DefaultPolicy}{$s$}
+  \While{$s$ is non-terminal}
+    \State choose $a \in A(s)$ uniformly at random
+    \State $s \gets f(s,a)$
+  \EndWhile
+  \State \Return reward for state $s$
+\EndFunction
+\State
+\Function{BackUp}{$v,\vartriangle$}
+  \While{$v$ is not null}
+    \State $N(v) \gets N(v) + 1$
+    \State $Q(v) \gets Q(v) + \vartriangle(v,p)$
+    \State $v \gets$ parent of $v$
+  \EndWhile
+\EndFunction
+\State
+\Function{BackUpNegamax}{$v,\vartriangle$}
+  \While{$v$ is not null}
+    \State $N(v) \gets N(v) + 1$
+    \State $Q(v) \gets Q(v) + \vartriangle(v,p)$
+    \State $\vartriangle \gets -\vartriangle$
+    \State $v \gets$ parent of $v$
+  \EndWhile
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

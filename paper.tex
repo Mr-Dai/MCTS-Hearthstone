@@ -291,9 +291,8 @@
 
 \usepackage{makeidx}
 \usepackage{moreverb}
-% \usepackage[lined,boxed,commentsnumbered]{algorithm2e}
 \usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algpseudocode}
 \newcommand{\papername}{基于蒙特卡洛方法的炉石传说人工智能}
 \newcommand{\schoolname}{中山大学本科毕业论文}
 \newcommand{\prolog}{\texttt{Prolog}}
@@ -350,7 +349,6 @@
 \newcommand{\operator}[2]{\mbox{\boldmath $#1$\hspace*{-#2ex}}}
 \newcommand{\mb}{\operator{B}{.2}}
 
-
 \begin{document}
 \begin{CJK*}{GBK}{song}
 \CJKtilde
@@ -397,6 +395,7 @@
  \pagestyle{plain}
  \pagenumbering{Roman}
  \biaozhunzihao
+\include{copy-right}
  %中文摘要
  \include{abstract1}
 
@@ -410,6 +409,7 @@
  \mainmatter
  \pagestyle{fancy}
  \biaozhunzihao
+ \song
 
  \include{chap1}
  \include{chap2}
@@ -428,7 +428,6 @@
 \bibliography{mcts-h}
 
 \include{ack}   %论文感谢部分
-\include{copy-right}
 \clearpage
 \end{CJK*}
 \end{document}
