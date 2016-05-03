@@ -1,5 +1,5 @@
-del *.pdf /s
-xelatex mcts-h.tex
-bibtex mcts-h.aux
-xelatex mcts-h.tex
-xelatex mcts-h.tex
+del paper.pdf
+xelatex paper.tex
+bibtex paper.aux
+xelatex paper.tex
+xelatex paper.tex
