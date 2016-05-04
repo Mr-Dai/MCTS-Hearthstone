@@ -360,7 +360,7 @@
 
 \titleformat{\chapter}[hang]
     {\filcenter\xiaoerhao\CJKfamily{hei}}
-    {第~{\thechapter}~章}
+    {{\thechapter}}
     {20pt}{\xiaoerhao}
 \titlespacing{\chapter}{0pt}{-3ex  plus .1ex minus .2ex}{2.5ex plus .1ex minus .2ex}
 
@@ -375,7 +375,7 @@
     {0pt}{1.5ex plus .1ex minus .2ex}{\wordsep}
 
 \pagestyle{fancy}
- \renewcommand{\chaptermark}[1]{\markboth{第\thechapter 章\ #1}{}}
+ \renewcommand{\chaptermark}[1]{\markboth{\thechapter \ #1}{}}
 \input{cover}
 
 \renewcommand\contentsname{目\quad 录}
@@ -396,7 +396,6 @@
  \pagestyle{plain}
  \pagenumbering{Roman}
  \biaozhunzihao
-\include{copy-right}
  %中文摘要
  \include{abstract1}
 

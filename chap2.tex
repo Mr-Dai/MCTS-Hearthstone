@@ -213,14 +213,12 @@ UCT~Ëã·¨Ê£ÓàµÄ²¿·ÖÓë~\ref{section:MCTSdef}~½ÚµÄÃèÊö»ù±¾ÏàÍ¬£ºÔÚËÑË÷Ëã·¨´Ó¸ù½áµãÍ
   \State \Return $a$(\Call{BestChild}{$v_0,0$})
 \EndFunction
 \State
-\Function{BestChild}{$v,c$}
-  \State \Return $\max_{v' \in \text{ children of } v} \frac{Q(v')}{N(v')} + c\sqrt{\frac{2\ln N(v)}{N(v')}}$
-\EndFunction
-\State
-\Function{Expand}{$v$}
-  \State choose $a \in $ untried actions from $A(s(v))$
-  \State add a new child $v'$ to $v$ with $s(v') = f(s(v),a)$ and  $a(v') = a$
-  \State \Return $v'$
+\Function{DefaultPolicy}{$s$}
+  \While{$s$ is non-terminal}
+    \State choose $a \in A(s)$ uniformly at random
+    \State $s \gets f(s,a)$
+  \EndWhile
+  \State \Return reward for state $s$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
@@ -240,15 +238,15 @@ UCT~Ëã·¨Ê£ÓàµÄ²¿·ÖÓë~\ref{section:MCTSdef}~½ÚµÄÃèÊö»ù±¾ÏàÍ¬£ºÔÚËÑË÷Ëã·¨´Ó¸ù½áµãÍ
   \State \Return $v$
 \EndFunction
 \State
-\Function{DefaultPolicy}{$s$}
-  \While{$s$ is non-terminal}
-    \State choose $a \in A(s)$ uniformly at random
-    \State $s \gets f(s,a)$
-  \EndWhile
-  \State \Return reward for state $s$
+\Function{Expand}{$v$}
+  \State choose $a \in $ untried actions from $A(s(v))$
+  \State add a new child $v'$ to $v$ with $s(v') = f(s(v),a)$ and  $a(v') = a$
+  \State \Return $v'$
 \EndFunction
 \State
-\State
+\Function{BestChild}{$v,c$}
+  \State \Return $\max_{v' \in \text{ children of } v} \frac{Q(v')}{N(v')} + c\sqrt{\frac{2\ln N(v)}{N(v')}}$
+\EndFunction
 \State
 \Function{BackUp}{$v,\vartriangle$}
   \While{$v$ is not null}
