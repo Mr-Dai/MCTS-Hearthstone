@@ -1,5 +1,11 @@
 \chapter{Ô¤±¸ÖªÊ¶}
 \label{section:Preliminaries}
+
+±¾ÕÂ½«¶Ô±¾ÎÄËùÊ¹ÓÃ·½·¨µÄ»ù±¾¶¨Òå½øĞĞÏêÏ¸ËµÃ÷¡£ÆäÖĞ£¬\ref{section:MonteCarloMethods}~½Ú½«¸ø³öÃÉÌØ¿¨Âå·½·¨µÄ»ù±¾¶¨Òå£¬ÒÔÈÃ¶ÁÕßÀí½âÃÉÌØ¿¨Âå·½·¨µÄÖ÷ÒªË¼Ïë¡£
+\ref{section:BanditBasedMethods}~½Ú½«½éÉÜ¾­µäµÄ~$K$~±Û¶Ä²©»úÎÊÌâ£¬²¢ËµÃ÷ÈçºÎ½«Ä³¸öÓÎÏ·×´Ì¬ÖĞËùÓĞµÄ¿ÉÑ¡²Ù×÷ÊÓ×÷Ò»¸ö~$K$~±Û¶Ä²©»úÎÊÌâ¡£
+\ref{section:MonteCarloSearch}~½Ú½«¸ø³öÈçºÎÊ¹ÓÃÃÉÌØ¿¨ÂåËÑË÷Ëã·¨½â¾ö²Ù×÷¾ö²ßµÄ~$K$~±Û¶Ä²©»úÎÊÌâ¡£
+\ref{section:MonteCarloTreeSearch}~½ÚÏÈ´Ó¼«Ğ¡¼«´óÖµËã·¨¿ªÊ¼£¬½éÉÜ²©ŞÄÓÎÏ·Ê¹ÓÃ²©ŞÄÊ÷±éÀúÎ´À´ÓÎÏ·×´Ì¬µÄ±ØÈ»ĞÔ£¬½ø¶ø½éÉÜÃÉÌØ¿¨ÂåËÑË÷Óë²©ŞÄÊ÷µÄ½áºÏËã·¨£ºÃÉÌØ¿¨ÂåÊ÷ËÑË÷¡£
+
 \section{ÃÉÌØ¿¨Âå·½·¨}
 \label{section:MonteCarloMethods}
 
@@ -220,13 +226,8 @@ UCT~Ëã·¨Ê£ÓàµÄ²¿·ÖÓë~\ref{section:MCTSdef}~½ÚµÄÃèÊö»ù±¾ÏàÍ¬£ºÔÚËÑË÷Ëã·¨´Ó¸ù½áµãÍ
   \EndWhile
   \State \Return reward for state $s$
 \EndFunction
-\end{algorithmic}
-\end{algorithm}
+\State
 
-\begin{algorithm}[!ht]
-\caption{UCT~Ëã·¨£¨Part 2£©}
-\label{alg:UCT2}
-\begin{algorithmic}
 \Function{TreePolicy}{$v$}
   \While{$v$ is nonterminal}
     \If{$v$ not fully expanded}
@@ -247,7 +248,13 @@ UCT~Ëã·¨Ê£ÓàµÄ²¿·ÖÓë~\ref{section:MCTSdef}~½ÚµÄÃèÊö»ù±¾ÏàÍ¬£ºÔÚËÑË÷Ëã·¨´Ó¸ù½áµãÍ
 \Function{BestChild}{$v,c$}
   \State \Return $\max_{v' \in \text{ children of } v} \frac{Q(v')}{N(v')} + c\sqrt{\frac{2\ln N(v)}{N(v')}}$
 \EndFunction
-\State
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!t]
+\caption{UCT~Ëã·¨£¨Part 2£©}
+\label{alg:UCT2}
+\begin{algorithmic}
 \Function{BackUp}{$v,\vartriangle$}
   \While{$v$ is not null}
     \State $N(v) \gets N(v) + 1$
